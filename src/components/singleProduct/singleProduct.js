@@ -43,7 +43,7 @@ const SingleProduct = ({ productDetails }) => {
         className={
           productDetails?.inStock ? "add-to-cart" : "add-to-cart nomouse"
         }
-        onClick={() => addItemToCart(productDetails)}
+        onClick={() => productDetails?.inStock && addItemToCart(productDetails)}
       >
         <img src={CartIcon} alt="add to cart icon" />
       </div>
