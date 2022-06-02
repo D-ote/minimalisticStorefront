@@ -1,0 +1,46 @@
+.cart-display {
+    position: absolute;
+    padding: 15px 10px;
+    top: 0px;
+    right: 105px;
+    width: 335px;
+    height: 430px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    box-shadow: 0px 4px 35px rgba(168, 172, 176, 0.19); 
+    background-color: var(--c-white);
+    z-index: 1000;
+}
+
+.dropdown-scroll {
+    height: 280px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.products-total {
+    display: flex;
+    justify-content: space-between;
+}
+
+.products-total h6:first-child {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.products-total h6 {
+    margin-top: 0;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.btn-div {
+    width: 48%;
+    cursor: pointer;
+}
+
+.dropdown-btn {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+}

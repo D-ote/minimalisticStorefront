@@ -1,0 +1,25 @@
+.btn-class {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    width: 100%;
+    border-radius: 0px;
+    padding: 16px 0;
+    cursor: pointer;
+}
+
+.plain {
+    background-color: var(--c-white);
+    border: 1px solid var(--c-text);    
+}
+
+.green {
+    background-color: var(--c-primary);
+    color: var(--c-white);
+    border: 1px solid var(--c-primary);
+}
+
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

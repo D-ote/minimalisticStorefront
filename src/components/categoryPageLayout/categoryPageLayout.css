@@ -1,0 +1,30 @@
+.category-page-layout > section:first-child {
+    width: 80%;
+    height: 80px;
+    max-width: 1300px;
+    margin: 0 auto;
+    /* position: fixed;
+    top: 0; */
+    /* z-index: 100; */
+}
+
+.category-page-layout > section:last-child {
+    width: 80%;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+/*scroll bar*/
+::-webkit-scrollbar {
+   width: 7px;
+}
+
+::-webkit-scrollbar-track {
+   box-shadow: inset 0 0 5px grey;
+   border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+   background: var(--table-header-text);
+   border-radius: 10px;
+}

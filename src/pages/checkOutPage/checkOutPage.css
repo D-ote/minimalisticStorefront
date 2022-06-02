@@ -1,0 +1,35 @@
+.checkout {
+    padding-bottom: 40px;
+}
+
+.checkout h1 {
+    font-weight: 700;
+    font-size: 32px;
+    text-transform: uppercase;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--c-border);
+}
+
+.break-line {
+    border-bottom: 1px solid var(--c-border);
+    margin: 20px 0;
+}
+
+.item-costing {
+    margin-bottom: 5px;
+}
+
+.item-costing p {
+    font-size: 24px;
+    font-weight: 400;
+    margin: 0;
+}
+
+.item-costing span {
+    font-weight: 700;
+}
+
+.checkout-btn {
+    width: 20%;
+    margin-top: 20px;
+}

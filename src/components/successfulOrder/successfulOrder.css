@@ -1,0 +1,12 @@
+.success {
+    text-align: center;
+}
+
+.success h1 {
+    margin: 40px auto;
+    font-size: 30px;
+}
+
+.orderBtn {
+    width: 50%;
+}
