@@ -1,4 +1,4 @@
-/* .women-category h2 {
+.women-category h2 {
     font-family: var(--font);
     font-weight: 400;
     font-size: 42px;
@@ -13,11 +13,15 @@
 }
 
 .product-card {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
     height: 378px;
     background-color: var(--c-white);
     padding: 10px;
     margin: 0 0 80px 0;
     position: relative;
+    cursor: pointer;
 }
 
 .display {
@@ -27,8 +31,8 @@
 .outofstock {
     background: var(--c-white);
     opacity: 0.5;
-    cursor: not-allowed;
 }
+
 
 .stock-text {
     position: absolute;
@@ -53,7 +57,7 @@
 .product-card img {
     width: 100%;
     height: 80%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .product-info p {
@@ -78,7 +82,42 @@
     cursor: pointer;
 }
 
+.nomouse {
+    cursor: not-allowed;
+}
+
 .add-to-cart img {
     width: 100%;
     height: 100%;
-} */
+}
+
+.add-to-cart:hover {
+    transform: scale(1.2);
+}
+
+.loader-div {
+    display: block;
+    margin: 0 auto;
+}
+
+@media (max-width: 769px) {
+    .products-layout {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 427px) {
+    .products-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 322px) {
+    .stock-text {
+        right: -25%;
+    }
+
+    .product-card img {
+        object-fit: contain;
+    }
+}

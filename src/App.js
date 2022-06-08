@@ -1,55 +1,126 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { useState } from "react";
-import "./App.css";
+import { Component } from "react";
 import AppRouter from "./AppRouter";
-import {
-  AddToCart,
-  CartList,
-  CurrencyContext,
-  GrandTotal,
-  ProductDescription,
-  ProductId,
-} from "./context/context";
+import { AddToCart, CurrencyContext } from "./context/context";
+import "./App.css";
 
-function App() {
-  const client = new ApolloClient({
-    cache: new InMemoryCache(),
-    uri: "http://localhost:4000/",
-  });
+class App extends Component {
+  constructor(props) {
+    super(props);
 
-  const [currency, setCurrency] = useState("$");
-  const [productDescription, setProductDescription] = useState({});
-  const [cartLoad, setCartLoad] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
+    this.client = new ApolloClient({
+      cache: new InMemoryCache(),
+      uri: "http://localhost:4000/",
+    });
 
-  const addItemToCart = (item) => {
-    const productIndex = cartLoad.findIndex(
+    this.state = {
+      currency: "$",
+      productDescription: {},
+      cartLoad: [],
+      totalPrice: 0,
+      totalCount: 0,
+    };
+
+    this.addItemToCart = this.addItemToCart.bind(this);
+    this.reduceItemCountFromCart = this.reduceItemCountFromCart.bind(this);
+    this.updateState = this.updateState.bind(this);
+    this.updateTotalPrice = this.updateTotalPrice.bind(this);
+    this.updateLocalStorage = this.updateLocalStorage.bind(this);
+    this.updateAttributes = this.updateAttributes.bind(this);
+  }
+
+  componentDidMount() {
+    this.getItemsFromLocalStorage();
+    this.updateTotalPrice();
+  }
+
+  updateLocalStorage() {
+    if (this.state.cartLoad) {
+      localStorage.setItem("cartItems", JSON.stringify(this.state.cartLoad));
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const currentCount = this.state.cartLoad.reduce(
+      (acc, item) => acc + item.count,
+      0
+    );
+    const prevCount = prevState.cartLoad.reduce(
+      (acc, item) => acc + item.count,
+      0
+    );
+    this.updateLocalStorage();
+
+    if (
+      currentCount !== prevCount ||
+      prevState.currency !== this.state.currency
+    ) {
+      this.updateTotalPrice();
+      this.updateState("totalCount", currentCount);
+    }
+  }
+
+  updateTotalPrice() {
+    const productTotalPrice = this.state.cartLoad?.reduce((acc, curr) => {
+      const productPrice = curr?.prices?.find(
+        (item) => item.currency.symbol === this.state.currency
+      ).amount;
+
+      return acc + curr.count * productPrice;
+    }, 0);
+    this.updateState("totalPrice", productTotalPrice);
+  }
+
+  getItemsFromLocalStorage() {
+    const allProducts = JSON.parse(localStorage.getItem("cartItems")) || [];
+    this.setState({ cartLoad: allProducts });
+  }
+
+  addItemToCart(item, attr) {
+    const productIndex = this.state.cartLoad.findIndex(
       (cartItem) => cartItem.id === item.id
     );
 
     if (productIndex >= 0) {
-      setCartLoad((prevCart) => {
-        let newCart = [...prevCart];
+      this.setState((prevState) => {
+        let newCart = [...prevState.cartLoad];
         newCart[productIndex] = {
           ...newCart[productIndex],
           count: newCart[productIndex].count + 1,
+          attr,
         };
 
-        return newCart;
+        this.updateLocalStorage("cartItem", newCart);
+        return { cartLoad: newCart };
       });
     } else {
-      setCartLoad((prevCart) => [...prevCart, { ...item, count: 1 }]);
-    }
-  };
+      this.setState((prevState) => {
+        const generateAtt = item.attributes.reduce(
+          (acc, curr) => ({ ...acc, [curr.name]: curr.items[0].id }),
+          {}
+        );
 
-  const reduceItemCountFromCart = (item) => {
+        return {
+          cartLoad: [
+            ...prevState.cartLoad,
+            { ...item, count: 1, attr: attr || generateAtt },
+          ],
+        };
+      });
+      this.updateLocalStorage();
+    }
+  }
+
+  reduceItemCountFromCart(item) {
+    const { cartLoad } = this.state;
+
     const productIndex = cartLoad.findIndex(
       (cartItem) => cartItem.id === item.id
     );
 
     if (productIndex >= 0) {
-      setCartLoad((prevCart) => {
-        let newCart = [...prevCart];
+      this.setState((prevState) => {
+        let newCart = [...prevState.cartLoad];
 
         if (newCart[productIndex].count === 1) {
           newCart.splice(productIndex, 1);
@@ -60,33 +131,62 @@ function App() {
           };
         }
 
-        return newCart;
+        this.updateLocalStorage("cartItem", this.newCart);
+        return { cartLoad: newCart };
       });
     }
-  };
+  }
 
-  return (
-    <ApolloProvider client={client}>
-      <CurrencyContext.Provider value={{ currency, setCurrency }}>
-        <ProductDescription.Provider
-          value={{ productDescription, setProductDescription }}
+  updateState(key, val) {
+    this.setState({ [key]: val });
+    // return false;
+  }
+
+  updateAttributes(itemID, attrName, attrVal) {
+    const productIndex = this.state.cartLoad.findIndex(
+      (cartItem) => cartItem.id === itemID
+    );
+    if (productIndex >= 0) {
+      this.setState((prevState) => {
+        let newCart = [...prevState.cartLoad];
+        newCart[productIndex] = {
+          ...newCart[productIndex],
+          attr: { ...newCart[productIndex].attr, [attrName]: attrVal },
+        };
+        this.updateLocalStorage("cartItem", newCart);
+        return { cartLoad: newCart };
+      });
+    }
+  }
+
+  render() {
+    const { currency, cartLoad, totalPrice, totalCount } = this.state;
+
+    return (
+      <ApolloProvider client={this.client}>
+        <CurrencyContext.Provider
+          value={{
+            currency,
+            setCurrency: (val) => this.updateState("currency", val),
+          }}
         >
           <AddToCart.Provider
             value={{
               cartLoad,
-              setCartLoad,
-              addItemToCart,
-              reduceItemCountFromCart,
+              totalCount,
+              totalPrice,
+              setCartLoad: (val) => this.updateState("cartLoad", val),
+              addItemToCart: this.addItemToCart,
+              updateAttributes: this.updateAttributes,
+              reduceItemCountFromCart: this.reduceItemCountFromCart,
             }}
           >
-            <GrandTotal.Provider value={{ totalPrice, setTotalPrice }}>
-              <AppRouter />
-            </GrandTotal.Provider>
+            <AppRouter />
           </AddToCart.Provider>
-        </ProductDescription.Provider>
-      </CurrencyContext.Provider>
-    </ApolloProvider>
-  );
+        </CurrencyContext.Provider>
+      </ApolloProvider>
+    );
+  }
 }
 
 export default App;

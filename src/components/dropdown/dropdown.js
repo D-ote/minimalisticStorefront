@@ -1,99 +1,99 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { Component, forwardRef } from "react";
 import {
   AddToCart,
-  CartList,
   CurrencyContext,
-  GrandTotal,
+  withContext,
+  withRouter,
 } from "../../context/context";
-import Button from "../button/button";
-import DropdownCartProductDetails from "../dropdownCartProductDetails/dropdownCartProductDetails";
-import EmptyState from "../emptyState/emptyState";
+import { Button } from "..";
 import "./dropdown.css";
+import { EmptyState } from "../emptyState";
+import { DropdownCartProductDetails } from "../dropdownCartProductDetails";
 
-const Dropdown = ({ ref }) => {
-  const navigate = useNavigate();
-  const cart = useContext(AddToCart);
-  const selected = useContext(CurrencyContext);
-  const total = useContext(GrandTotal);
+const Dropdown = forwardRef((props, ref) => {
+  class Dropdown extends Component {
+    constructor(props) {
+      super(props);
 
-  const cartLoad = cart.cartLoad;
-  const totalPrice = total.totalPrice;
+      this.props = props;
+      this.viewCartPage = this.viewCartPage.bind(this);
+      this.viewCheckOutPage = this.viewCheckOutPage.bind(this);
+    }
 
-  let countArray = cartLoad.map((item) => item.count);
+    viewCartPage() {
+      this.props.toggleDropdown();
+      this.props.router.navigate("/viewbag");
+    }
 
-  useEffect(() => {
-    //go through all the products
-    const productTotalPrice = cartLoad?.reduce((acc, curr) => {
-      const productPrice = curr?.prices?.find(
-        (item) => item.currency.symbol === selected.currency
-      ).amount;
+    viewCheckOutPage() {
+      this.props.toggleDropdown();
+      this.props.router.navigate("/place-order");
+    }
 
-      return acc + curr.count * productPrice;
-    }, 0);
+    render() {
+      const { cartLoad, totalPrice, totalCount } = this.props.cart;
 
-    total.setTotalPrice(productTotalPrice);
-  }, [cart]);
-
-  useEffect(() => {
-    const products = JSON.parse(localStorage.getItem("cartItem") || []);
-    cart.setCartLoad(products);
-  }, []);
-
-  // console.log(list.cartList, "list");
-
-  return (
-    <div className="cart-display" ref={ref}>
-      <h6>
-        My Bag:
-        <span> {countArray.reduce((acc, prev) => acc + prev, 0)} items</span>
-      </h6>
-      {cartLoad.length > 0 ? (
-        <div className="dropdown-scroll">
-          <section>
-            {cartLoad?.map((item, id) => (
-              <DropdownCartProductDetails cartItem={item} key={id} />
-            ))}
-          </section>
-          {cartLoad.length > 0 && (
-            <div className="products-total">
-              <h6>Total</h6>
-              <h6>
-                {selected.currency}&nbsp;
-                {totalPrice.toFixed(2)}
-              </h6>
+      return (
+        <div className="cart-display" ref={ref} id="dropdown-content">
+          <h6>
+            My Bag:
+            <span> {totalCount} items</span>
+          </h6>
+          {cartLoad.length > 0 ? (
+            <div className="dropdown-scroll">
+              <section>
+                {cartLoad?.map((item, id) => (
+                  <DropdownCartProductDetails cartItem={item} key={id} />
+                ))}
+              </section>
+              {cartLoad.length > 0 && (
+                <div className="products-total">
+                  <h6>Total</h6>
+                  <h6>
+                    {this.props.selected.currency}&nbsp;
+                    {Number(totalPrice.toFixed(2) ?? 0).toLocaleString("en")}
+                  </h6>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="dropdown-emptyState">
+              <EmptyState />
             </div>
           )}
+          <div className="dropdown-btn">
+            <div className="btn-div">
+              <Button
+                type="button"
+                isDisabled={!cartLoad.length}
+                label="View bag"
+                btnType="plain"
+                onClick={() => this.viewCartPage()}
+              />
+            </div>
+            <div className="btn-div">
+              <Button
+                type="button"
+                className={cartLoad.length === 0 && "disabled"}
+                isDisabled={!cartLoad.length}
+                label="check out"
+                onClick={() => this.viewCheckOutPage()}
+                btnType={cartLoad.length === 0 ? "green disabled" : "green"}
+              />
+            </div>
+          </div>
         </div>
-      ) : (
-        <div className="dropdown-emptyState">
-          <EmptyState />
-        </div>
-      )}
-      <div className="dropdown-btn">
-        <div className="btn-div">
-          <Button
-            type="button"
-            isDisabled={!cartLoad.length}
-            label="View bag"
-            btnType="plain"
-            onClick={() => {
-              navigate("/women/checkout");
-            }}
-          />
-        </div>
-        <div className="btn-div">
-          <Button
-            type="button"
-            className={cartLoad.length === 0 && "disabled"}
-            isDisabled={!cartLoad.length}
-            label="check out"
-            btnType={cartLoad.length === 0 ? "green disabled" : "green"}
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
+      );
+    }
+  }
 
-export default Dropdown;
+  return <Dropdown {...props} />;
+});
+
+export default withRouter(
+  withContext(
+    "selected",
+    CurrencyContext,
+    withContext("cart", AddToCart, Dropdown)
+  )
+);

@@ -19,6 +19,7 @@ import Jacket from "./jacket.jpeg";
 import Bars from "./Filter.svg";
 import NullState from "./rafiki.svg";
 import Order from "./order.svg";
+import Vector from "./vector.svg";
 
 export {
   Logo,
@@ -42,4 +43,5 @@ export {
   Bars,
   NullState,
   Order,
+  Vector,
 };

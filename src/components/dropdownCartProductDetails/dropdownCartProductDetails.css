@@ -82,3 +82,8 @@
     opacity: 0.5;
     cursor: not-allowed !important;
 }
+
+.selected-attr {
+    background-color: var(--c-text);
+    color: var(--c-white);
+}

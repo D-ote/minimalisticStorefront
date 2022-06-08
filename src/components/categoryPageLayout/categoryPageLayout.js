@@ -1,26 +1,21 @@
-import React from "react";
-import Header from "../header/header";
+import React, { Component } from "react";
+import { Outlet } from "react-router-dom";
+import { Header } from "../header";
 import "./categoryPageLayout.css";
 
-const Layout = ({ children }) => {
-  return (
-    <div className="category-page-layout">
-      <section>
-        <Header />
-      </section>
-      <section> {children} </section>
-    </div>
-  );
-};
-
-const CategoryPageLayout = (Component) => {
-  return (props) => {
+class CategoryPageLayout extends Component {
+  render() {
     return (
-      <Layout>
-        <Component {...props} />
-      </Layout>
+      <div className="category-page-layout">
+        <section>
+          <Header />
+        </section>
+        <section>
+          <Outlet />
+        </section>
+      </div>
     );
-  };
-};
+  }
+}
 
 export default CategoryPageLayout;
