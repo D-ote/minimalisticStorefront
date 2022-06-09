@@ -29,7 +29,6 @@ class ProductDescription extends Component {
   }
 
   handleAddProductToCart(productDetails) {
-    console.log({ attributesToAdd: this.state.attr });
     this.cart.addItemToCart(productDetails, this.state.attr);
   }
 
@@ -79,8 +78,6 @@ class ProductDescription extends Component {
     const details = this.props.data.product;
     const selectedImage = this.props.data?.product?.gallery[0] ?? "";
 
-    console.log({ details, attributes: this.state.attr });
-
     const loading = this.props.data.loading;
     const error = this.props.data?.error;
     this.price = this.props?.data?.product?.prices?.find(
@@ -101,50 +98,44 @@ class ProductDescription extends Component {
 
     return (
       <div className="product-description-page">
-        {details ? (
-          <>
-            <div className="product-desc-small-img">
-              {details?.gallery && this.renderImgThumbnail(details?.gallery)}
+        <>
+          <div className="product-desc-small-img">
+            {details?.gallery && this.renderImgThumbnail(details?.gallery)}
+          </div>
+
+          <div className="product-desc-main-img">
+            <img src={selectedImage} alt="big img" />
+          </div>
+
+          <div className="product-desc-details">
+            <h1>{details?.brand}</h1>
+            <span>{details?.name}</span>
+            {details?.attributes ? this.renderAttributes(details) : ""}
+
+            <div className="product-price">
+              <p>Price:</p>
+              <h6>{`${this.price?.currency?.symbol ?? ""} ${
+                this.price?.amount ?? ""
+              }`}</h6>
             </div>
 
-            <div className="product-desc-main-img">
-              <img src={selectedImage} alt="big img" />
+            <div className="product-desc-btn">
+              <Button
+                isDisabled={!details?.inStock}
+                type="button"
+                label="ADD TO CART"
+                btnType="green"
+                className="desc-btn"
+                onClick={() => this.handleAddProductToCart(details)}
+              />
             </div>
 
-            <div className="product-desc-details">
-              <h1>{details?.brand}</h1>
-              <span>{details?.name}</span>
-              {details?.attributes ? this.renderAttributes(details) : ""}
-
-              <div className="product-price">
-                <p>Price:</p>
-                <h6>{`${this.price?.currency?.symbol ?? ""} ${
-                  this.price?.amount ?? ""
-                }`}</h6>
-              </div>
-
-              <div className="product-desc-btn">
-                <Button
-                  isDisabled={!details?.inStock}
-                  type="button"
-                  label="ADD TO CART"
-                  btnType="green"
-                  className="desc-btn"
-                  onClick={() => this.handleAddProductToCart(details)}
-                />
-              </div>
-
-              <div
-                className="summary"
-                dangerouslySetInnerHTML={{ __html: details?.description }}
-              ></div>
-            </div>
-          </>
-        ) : loading ? (
-          <p>loading...</p>
-        ) : (
-          error && <p>An error occured!</p>
-        )}
+            <div
+              className="summary"
+              dangerouslySetInnerHTML={{ __html: details?.description }}
+            ></div>
+          </div>
+        </>
       </div>
     );
   }

@@ -7,7 +7,9 @@
     position: fixed;
     top: 0;
     z-index: 100;
-    width: 80%;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 10%;
 }
 
 .header-link {
@@ -18,7 +20,6 @@
 }
 
 .header-link li {
-    /* cursor: pointer; */
     text-transform: uppercase;
     font-family: var(--font);
     font-size: 16px;
@@ -80,6 +81,9 @@
 
   .cart-div {
       position: relative;
+    }
+    
+    .cursor {
       cursor: pointer;
   }
 
@@ -167,8 +171,7 @@
     }
 
     .currency-dropdown {
-        /* position: absolute; */
-        top: 223px;
+        top: 214px;
         right: 50px;
     }
 
@@ -177,11 +180,7 @@
     }
 
     .cart-count {
-      top: 230px;
-      left: 44px
-    }
-
-    .cart-icon {
-        margin-left: 10px;
+      top: 220px;
+      left: 36px
     }
   }

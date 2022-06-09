@@ -80,14 +80,14 @@ class Header extends React.Component {
 
   mobileCartView() {
     this.props.router.navigate("/viewbag");
-    this.setState({ cartDisplay: false });
+    this.toggleNavVisibility();
   }
 
   render() {
-    const categories = this.props.data.categories;
-    const currencies = this.props.data.currencies;
+    const categories = this.props.data?.categories;
+    const currencies = this.props.data?.currencies;
 
-    // console.log(this.props.currency.currency, "sss");
+    console.log(this.state?.dropdown, this.props.data?.currencies, "sss");
 
     return (
       <>
@@ -163,6 +163,7 @@ class Header extends React.Component {
                 src={EmptyCart}
                 alt="currencies"
                 onClick={this.toggleCartVisibility}
+                className="cursor"
               />
               <div className="cart-count">{this.props.cart.totalCount}</div>
               {this.state.cartDisplay && (
@@ -188,10 +189,14 @@ class Header extends React.Component {
                   {categories?.map((category, index) => (
                     <li key={index} onClick={this.toggleNavVisibility}>
                       <Link
-                        to={category.name === "all" ? "/" : category.name}
+                        to={
+                          category.name === "all" ? "/" : `/#${category.name}`
+                        }
                         className={`${
                           this.setActive(
-                            `${category.name}` === "all" ? "" : category.name
+                            `${category.name}` === "all"
+                              ? ""
+                              : `#${category.name}`
                           ) && "active"
                         }`}
                       >
@@ -203,20 +208,26 @@ class Header extends React.Component {
 
                 <ul className="mobile-nav-list">
                   <li>
-                    <img
-                      src={this.state.dropdown ? CurrencyOn : CurrencyOff}
-                      alt="currency selector"
-                      onClick={() => {
+                    <span
+                      onClick={() =>
                         this.setState({
                           ...this.state,
                           dropdown: !this.state.dropdown,
-                        });
-                      }}
-                    />
+                        })
+                      }
+                      className="currency"
+                    >
+                      {this.props.currency.currency}{" "}
+                      <img
+                        src={Vector}
+                        className={this.state?.dropdown ? "up" : "down"}
+                        alt="currency selector"
+                      />
+                    </span>
                     {this.state?.dropdown && (
                       <div id="overlay">
                         <ul className="currency-dropdown">
-                          {this.currencies?.map((currency, index) => (
+                          {currencies?.map((currency, index) => (
                             <li
                               key={index}
                               onClick={() => {

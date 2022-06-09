@@ -47,8 +47,6 @@ class DropdownCartProductDetails extends Component {
       (item) => item?.currency?.symbol === this.props.selected.currency
     );
 
-    console.log(this.props.cartItem.attr, "attr");
-
     return (
       <div className="cart-product">
         <div className="product-description">

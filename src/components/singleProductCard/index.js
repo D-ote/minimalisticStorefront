@@ -27,8 +27,6 @@ class SingleProductCard extends Component {
     );
     const productDetails = this.props.productDetails;
 
-    console.log(productDetails);
-
     return (
       <figure
         className={
