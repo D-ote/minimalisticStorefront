@@ -1,6 +1,7 @@
 import { graphql } from "@apollo/client/react/hoc";
 import React, { Component } from "react";
 import { Attributes, Button, ImgThumbnail, Loader } from "../../components";
+import Alert from "../../components/alert";
 import {
   AddToCart,
   CurrencyContext,
@@ -20,6 +21,7 @@ class ProductDescription extends Component {
       details: {},
       attr: null,
       hasSelectedAttribute: false,
+      isSuccess: false,
     };
 
     this.cart = this.props.cart;
@@ -30,6 +32,7 @@ class ProductDescription extends Component {
 
   handleAddProductToCart(productDetails) {
     this.cart.addItemToCart(productDetails, this.state.attr);
+    this.setState({ isSuccess: true });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -80,6 +83,7 @@ class ProductDescription extends Component {
 
     const loading = this.props.data.loading;
     const error = this.props.data?.error;
+    const alert = this.state?.isSuccess;
     this.price = this.props?.data?.product?.prices?.find(
       (item) => item.currency.symbol === this.props.selected.currency
     );
@@ -96,17 +100,21 @@ class ProductDescription extends Component {
       return <p>An error occured!</p>;
     }
 
+    setTimeout(() => {
+      this.setState({ isSuccess: false });
+    }, 2000);
+
     return (
       <div className="product-description-page">
         <>
+          {" "}
+          <Alert alert={alert} />
           <div className="product-desc-small-img">
             {details?.gallery && this.renderImgThumbnail(details?.gallery)}
           </div>
-
           <div className="product-desc-main-img">
             <img src={selectedImage} alt="big img" />
           </div>
-
           <div className="product-desc-details">
             <h1>{details?.brand}</h1>
             <span>{details?.name}</span>

@@ -7,6 +7,8 @@ import Bars from "./Filter.svg";
 import NullState from "./rafiki.svg";
 import Order from "./order.svg";
 import Vector from "./vector.svg";
+import Cancel from "./cancel.svg";
+import Success from "./success.svg";
 
 export {
   Logo,
@@ -18,4 +20,6 @@ export {
   NullState,
   Order,
   Vector,
+  Cancel,
+  Success,
 };

@@ -10,3 +10,4 @@ export * from "./dropdownCartProductDetails";
 export * from "./cartProductDetails";
 export * from "./storeLayout";
 export * from "./dropdown/dropdown";
+export * from "./alert";

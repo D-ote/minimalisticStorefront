@@ -125,6 +125,12 @@
     color: var(--c-white);
 }
 
+.showAlert{
+    opacity: 1;
+    pointer-events: auto;
+    animation: show_alert 1s ease forwards;
+}
+
 @media (max-width: 1025px) {
     .product-description-page {
     display: flex;
@@ -141,7 +147,6 @@
         flex-wrap: nowrap;
         width: auto;
         height: fit-content;
-        /* overflow-x: scroll; */
         overflow-y: hidden;
     }
     
