@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ProductDescription, Home, PlaceOrder, ViewBag } from "./pages";
-import CategoryPageLayout from "./components/categoryPageLayout/categoryPageLayout";
+import { StoreLayout } from "./components";
 
 class AppRouter extends Component {
   render() {
     return (
       <Router>
         <Routes>
-          <Route path="/" element={<CategoryPageLayout />}>
+          <Route path="/" element={<StoreLayout />}>
             <Route index element={<Home />} />
             <Route path="/product/:id" element={<ProductDescription />} />
             <Route path="/viewbag" element={<ViewBag />} />

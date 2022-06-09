@@ -1,14 +1,7 @@
 import React from "react";
 import { graphql } from "@apollo/client/react/hoc";
 import { Link } from "react-router-dom";
-import {
-  Bars,
-  CurrencyOff,
-  CurrencyOn,
-  EmptyCart,
-  Logo,
-  Vector,
-} from "../../assets";
+import { Bars, EmptyCart, Logo, Vector } from "../../assets";
 import {
   AddToCart,
   CurrencyContext,
@@ -16,8 +9,8 @@ import {
   withRouter,
 } from "../../context/context";
 import { GET_CATEGORIES_AND_CURRENCIES } from "../../graphQl/queries";
-import Dropdown from "../dropdown/dropdown";
 import "./header.css";
+import Dropdown from "../dropdown/dropdown";
 
 class Header extends React.Component {
   constructor(props) {
@@ -86,8 +79,6 @@ class Header extends React.Component {
   render() {
     const categories = this.props.data?.categories;
     const currencies = this.props.data?.currencies;
-
-    console.log(this.state?.dropdown, this.props.data?.currencies, "sss");
 
     return (
       <>

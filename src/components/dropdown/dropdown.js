@@ -67,7 +67,7 @@ const Dropdown = forwardRef((props, ref) => {
                 type="button"
                 isDisabled={!cartLoad.length}
                 label="View bag"
-                btnType="plain"
+                btnType={cartLoad.length === 0 ? "plain disabled" : "plain"}
                 onClick={() => this.viewCartPage()}
               />
             </div>

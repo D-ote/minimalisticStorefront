@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Outlet } from "react-router-dom";
 import { Header } from "../header";
-import "./categoryPageLayout.css";
+import "./storeLayout.css";
 
-class CategoryPageLayout extends Component {
+export class StoreLayout extends Component {
   render() {
     return (
       <div className="category-page-layout">
@@ -17,5 +17,3 @@ class CategoryPageLayout extends Component {
     );
   }
 }
-
-export default CategoryPageLayout;
