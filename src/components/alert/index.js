@@ -6,7 +6,6 @@ class Alert extends Component {
   render() {
     const { alert } = this.props;
 
-    console.log(alert, "la");
     return (
       <div className={alert ? "alert showAlert" : "alert hide"}>
         <span>

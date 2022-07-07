@@ -6,6 +6,7 @@ import {
   withContext,
   withRouter,
 } from "../../context/context";
+import { roundToTwo } from "../../utils/utils";
 
 class SingleProductCard extends Component {
   constructor(props) {
@@ -28,36 +29,49 @@ class SingleProductCard extends Component {
     const productDetails = this.props.productDetails;
 
     return (
-      <figure
-        className={
-          productDetails.inStock ? "product-card" : "product-card outofstock"
-        }
-        onClick={() => this.handleRedirectToProductPage()}
-      >
-        <img src={productDetails?.gallery[0]} alt="category product" />
-        <p className={productDetails?.inStock ? "display" : "stock-text"}>
-          OUT OF STOCK
-        </p>
+      <div className="product-div">
+        <figure
+          className={
+            productDetails.inStock ? "product-card" : "product-card outofstock"
+          }
+          onClick={() => this.handleRedirectToProductPage()}
+        >
+          <img
+            src={productDetails?.gallery[0]}
+            alt="category product"
+            className="product-img"
+          />
+          <div
+            className={productDetails?.inStock ? "display" : "stock-text-div"}
+          >
+            <p className="stock-text">OUT OF STOCK</p>
+          </div>
+          <figcaption className="product-info">
+            <p>{productDetails?.name}</p>
+            <h6>
+              {`${price?.currency?.symbol ?? ""} ${
+                roundToTwo(price?.amount.toFixed(2)).toLocaleString("en") ?? ""
+              }`}
+            </h6>
+          </figcaption>
+        </figure>
         <div
           className={
             productDetails?.inStock ? "add-to-cart" : "add-to-cart nomouse"
           }
-          onClick={() =>
+          onClick={() => {
             productDetails?.inStock &&
-            this.props.cart.addItemToCart(productDetails)
-          }
+              this.props.cart.updateState("modalState", true);
+            this.props.cart.updateState("modalAttributes", productDetails);
+          }}
+          // onClick={() =>
+          //   productDetails?.inStock &&
+          //   this.props.cart.addItemToCart(productDetails)
+          // }
         >
-          <img src={CartIcon} alt="add to cart icon" />
+          <img src={CartIcon} alt="add to cart icon" className="cart-icon" />
         </div>
-        <figcaption className="product-info">
-          <p>{productDetails?.name}</p>
-          <h6>
-            {`${price?.currency?.symbol ?? ""} ${
-              Number(price?.amount.toFixed(2)).toLocaleString("en") ?? ""
-            }`}
-          </h6>
-        </figcaption>
-      </figure>
+      </div>
     );
   }
 }

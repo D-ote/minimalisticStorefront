@@ -19,16 +19,16 @@
 
 @keyframes show_alert {
   0%{
-    transform: translateX(100%);
+    transform: translateY(100%);
   }
   40%{
-    transform: translateX(-10%);
+    transform: translateY(-10%);
   }
   80%{
-    transform: translateX(0%);
+    transform: translateY(0%);
   }
   100%{
-    transform: translateX(-10px);
+    transform: translateY(-10px);
   }
 }
 

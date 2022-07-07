@@ -19,6 +19,8 @@ class App extends Component {
       cartLoad: [],
       totalPrice: 0,
       totalCount: 0,
+      modalState: false,
+      modalAttributes: {},
     };
 
     this.addItemToCart = this.addItemToCart.bind(this);
@@ -77,9 +79,9 @@ class App extends Component {
   }
 
   addItemToCart(item, attr) {
-    const productIndex = this.state.cartLoad.findIndex(
-      (cartItem) => cartItem.id === item.id
-    );
+    const productIndex = this.state.cartLoad.findIndex((cartItem) => {
+      return cartItem.id === item.id && cartItem.attr.attrVal === attr.attrVal;
+    });
 
     if (productIndex >= 0) {
       this.setState((prevState) => {
@@ -111,11 +113,12 @@ class App extends Component {
     }
   }
 
-  reduceItemCountFromCart(item) {
+  reduceItemCountFromCart(item, attr) {
     const { cartLoad } = this.state;
 
     const productIndex = cartLoad.findIndex(
-      (cartItem) => cartItem.id === item.id
+      (cartItem) =>
+        cartItem.id === item.id && cartItem.attr.attrVal === attr.attrVal
     );
 
     if (productIndex >= 0) {
@@ -128,6 +131,7 @@ class App extends Component {
           newCart[productIndex] = {
             ...newCart[productIndex],
             count: newCart[productIndex].count - 1,
+            attr,
           };
         }
 
@@ -160,7 +164,14 @@ class App extends Component {
   }
 
   render() {
-    const { currency, cartLoad, totalPrice, totalCount } = this.state;
+    const {
+      currency,
+      cartLoad,
+      totalPrice,
+      totalCount,
+      modalState,
+      modalAttributes,
+    } = this.state;
 
     return (
       <ApolloProvider client={this.client}>
@@ -175,6 +186,9 @@ class App extends Component {
               cartLoad,
               totalCount,
               totalPrice,
+              modalState,
+              modalAttributes,
+              updateState: this.updateState,
               setCartLoad: (val) => this.updateState("cartLoad", val),
               addItemToCart: this.addItemToCart,
               updateAttributes: this.updateAttributes,

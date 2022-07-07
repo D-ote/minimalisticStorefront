@@ -21,29 +21,24 @@ class CartProductDetails extends Component {
     this.updateAttribute = this.props.cart.updateAttribute;
   }
 
-  handleAddCount = () => {
-    this.props.cart.addItemToCart(this.props.productDetails);
+  handleAddCount = (attr) => {
+    this.props.cart.addItemToCart(this.props.productDetails, attr);
   };
 
-  handleReduceCount = () => {
-    this.props.cart.reduceItemCountFromCart(this.props.productDetails);
+  handleReduceCount = (attr) => {
+    this.props.cart.reduceItemCountFromCart(this.props.productDetails, attr);
   };
 
   handleSelectAttribute = (name, item) => {
     this.props.cart.updateAttributes(this.props.cartItem.id, name, item.id);
   };
 
-  renderAttributes = (productDetails) =>
-    productDetails?.attributes?.map((attribute, index) => (
-      <Attributes
-        attribute={attribute}
-        key={index}
-        cartAttr={productDetails?.attr}
-        updateAttribute={(item) =>
-          this.handleSelectAttribute(attribute.name, item)
-        }
-      />
-    ));
+  renderAttributes = (productDetails) => (
+    <Attributes
+      attribute={productDetails?.attr?.attrName}
+      cartAttr={productDetails?.attr?.attrVal}
+    />
+  );
 
   render() {
     const price = this.props.productDetails?.prices?.find(
@@ -64,12 +59,26 @@ class CartProductDetails extends Component {
         </div>
         <div className="products-section2">
           <div className="cart-page-product-counter">
-            <img src={Add} alt="add cart items" onClick={this.handleAddCount} />
+            <img
+              src={Add}
+              alt="add cart items"
+              onClick={() =>
+                this.handleAddCount({
+                  attrName: productDetails.attr.attrName,
+                  attrVal: productDetails.attr.attrVal,
+                })
+              }
+            />
             {productDetails.count}
             <img
               src={Minus}
               alt="reduce cart items"
-              onClick={this.handleReduceCount}
+              onClick={() =>
+                this.handleReduceCount({
+                  attrName: productDetails.attr.attrName,
+                  attrVal: productDetails.attr.attrVal,
+                })
+              }
             />
           </div>
           <div className="cart-page-img">

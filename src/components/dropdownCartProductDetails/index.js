@@ -17,29 +17,24 @@ class DropdownCartProductDetails extends Component {
     this.updateAttribute = this.props.cart.updateAttribute;
   }
 
-  handleAddCount = () => {
-    this.props.cart.addItemToCart(this.props.cartItem);
+  handleAddCount = (attr) => {
+    this.props.cart.addItemToCart(this.props.cartItem, attr);
   };
 
-  handleReduceCount = () => {
-    this.props.cart.reduceItemCountFromCart(this.props.cartItem);
+  handleReduceCount = (attr) => {
+    this.props.cart.reduceItemCountFromCart(this.props.cartItem, attr);
   };
 
   handleSelectAttribute = (name, item) => {
     this.props.cart.updateAttributes(this.props.cartItem.id, name, item.id);
   };
 
-  renderAttributes = (cartItem) =>
-    cartItem?.attributes?.map((attribute, index) => (
-      <Attributes
-        attribute={attribute}
-        key={index}
-        cartAttr={cartItem?.attr}
-        updateAttribute={(item) =>
-          this.handleSelectAttribute(attribute.name, item)
-        }
-      />
-    ));
+  renderAttributes = (cartItem) => (
+    <Attributes
+      attribute={cartItem?.attr.attrName}
+      cartAttr={cartItem.attr.attrVal}
+    />
+  );
 
   render() {
     const cartItem = this.props.cartItem;
@@ -55,16 +50,30 @@ class DropdownCartProductDetails extends Component {
           <h6>{`${price?.currency?.symbol ?? ""} ${
             Number(price?.amount.toFixed(2)).toLocaleString("en") ?? ""
           }`}</h6>
-          {cartItem?.attributes ? this.renderAttributes(cartItem) : ""}
+          {cartItem?.attr ? this.renderAttributes(cartItem) : ""}
         </div>
         <div className="products-section2">
           <div className="product-counter">
-            <img src={Add} alt="add cart items" onClick={this.handleAddCount} />
+            <img
+              src={Add}
+              alt="add cart items"
+              onClick={() =>
+                this.handleAddCount({
+                  attrName: cartItem.attr.attrName,
+                  attrVal: cartItem.attr.attrVal,
+                })
+              }
+            />
             {cartItem.count}
             <img
               src={Minus}
               alt="reduce cart items"
-              onClick={this.handleReduceCount}
+              onClick={() =>
+                this.handleReduceCount({
+                  attrName: cartItem.attr.attrName,
+                  attrVal: cartItem.attr.attrVal,
+                })
+              }
             />
           </div>
           <div className="cart-img">
