@@ -1,7 +1,8 @@
 import { graphql } from "@apollo/client/react/hoc";
 import React, { Component } from "react";
 import { SingleProductCard, Loader } from "../../components";
-import { withRouter } from "../../context/context";
+import { AttributesModal } from "../../components/attributesModal";
+import { AddToCart, withContext, withRouter } from "../../context/context";
 import { GET_PRODUCTS_BY_CATEGORY } from "../../graphQl/queries";
 import "./home.css";
 
@@ -25,6 +26,7 @@ class Home extends Component {
 
     return (
       <div className="women-category">
+        {this.props.cart.modalState && <AttributesModal />}
         <h2>{category.name}</h2>
         <section className="products-layout">
           {category.products.length &&
@@ -38,18 +40,22 @@ class Home extends Component {
 }
 
 Home = withRouter(
-  graphql(GET_PRODUCTS_BY_CATEGORY, {
-    options: (props) => {
-      let title = props.router.location?.hash
-        ? props.router.location?.hash.split("#")[1]
-        : "all";
-      return {
-        variables: {
-          input: { title },
-        },
-      };
-    },
-  })(Home)
+  withContext(
+    "cart",
+    AddToCart,
+    graphql(GET_PRODUCTS_BY_CATEGORY, {
+      options: (props) => {
+        let title = props.router.location?.hash
+          ? props.router.location?.hash.split("#")[1]
+          : "all";
+        return {
+          variables: {
+            input: { title },
+          },
+        };
+      },
+    })(Home)
+  )
 );
 
 export { Home };
