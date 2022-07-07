@@ -15,11 +15,13 @@
     height: 550px;
     overflow-y: scroll;
     grid-area: small;
+    cursor: pointer;
 }
 
 .product-desc-img-wrapper {
     height: 120px;
     margin-bottom: 20px;
+    position: relative;
 }
 
 .product-desc-img-wrapper img {
@@ -129,6 +131,31 @@
     opacity: 1;
     pointer-events: auto;
     animation: show_alert 1s ease forwards;
+}
+
+.pdp-stock {
+    position: absolute;
+    top: 50%;
+    right: 45%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 4;      
+}
+
+.small-out-of-stock-text-div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 4;  
+}
+
+.small-stock-text {
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--c-faded);
+
 }
 
 @media (max-width: 1025px) {

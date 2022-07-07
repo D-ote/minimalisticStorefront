@@ -1,7 +1,9 @@
 import { graphql } from "@apollo/client/react/hoc";
+import { Parser } from "html-to-react";
 import React, { Component } from "react";
 import { Attributes, Button, ImgThumbnail, Loader } from "../../components";
 import Alert from "../../components/alert";
+import { AttributesModal } from "../../components/attributesModal";
 import {
   AddToCart,
   CurrencyContext,
@@ -31,8 +33,8 @@ class ProductDescription extends Component {
   }
 
   handleAddProductToCart(productDetails) {
-    this.cart.addItemToCart(productDetails, this.state.attr);
-    this.setState({ isSuccess: true });
+    this.props.cart.updateState("modalState", true);
+    this.props.cart.updateState("modalAttributes", productDetails);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -54,19 +56,20 @@ class ProductDescription extends Component {
     this.setState({ attr: null });
   }
 
-  renderImgThumbnail = (gallery) =>
+  renderImgThumbnail = (gallery, stockState) =>
     gallery?.map((item, index) => (
       <ImgThumbnail
         item={item}
         key={index}
+        stockState={stockState}
         onClick={() => this.setState({ selectedImage: item })}
       />
     ));
 
-  renderAttributes = (details) =>
-    details?.attributes?.map((attribute, index) => (
+  renderAttributes = (details) => {
+    return details?.attributes?.map((attribute, index) => (
       <Attributes
-        attribute={attribute}
+        title={attribute}
         key={index}
         cartAttr={this.state.attr}
         addAttribute={(val) =>
@@ -76,10 +79,12 @@ class ProductDescription extends Component {
         }
       />
     ));
+  };
 
   render() {
     const details = this.props.data.product;
-    const selectedImage = this.props.data?.product?.gallery[0] ?? "";
+    const selectedImage =
+      this.state?.selectedImage ?? this.props.data?.product?.gallery[0];
 
     const loading = this.props.data.loading;
     const error = this.props.data?.error;
@@ -107,13 +112,33 @@ class ProductDescription extends Component {
     return (
       <div className="product-description-page">
         <>
-          {" "}
-          <Alert alert={alert} />
-          <div className="product-desc-small-img">
-            {details?.gallery && this.renderImgThumbnail(details?.gallery)}
+          {this.props.cart.modalState && <AttributesModal />}
+          <div
+            className={
+              this.props?.data?.product?.inStock
+                ? "product-desc-small-img"
+                : "product-desc-small-img outofstock"
+            }
+          >
+            {details?.gallery &&
+              this.renderImgThumbnail(details?.gallery, details?.inStock)}
           </div>
-          <div className="product-desc-main-img">
+
+          <div
+            className={
+              this.props?.data?.product?.inStock
+                ? "product-desc-main-img"
+                : "product-desc-main-img outofstock"
+            }
+          >
             <img src={selectedImage} alt="big img" />
+            <div
+              className={
+                this.props?.data?.product?.inStock ? "display" : "pdp-stock"
+              }
+            >
+              <p className="stock-text">OUT OF STOCK</p>
+            </div>
           </div>
           <div className="product-desc-details">
             <h1>{details?.brand}</h1>
@@ -133,15 +158,17 @@ class ProductDescription extends Component {
                 type="button"
                 label="ADD TO CART"
                 btnType="green"
-                className="desc-btn"
+                className={details?.inStock ? "desc-btn" : "desc-btn disabled"}
                 onClick={() => this.handleAddProductToCart(details)}
               />
             </div>
 
             <div
               className="summary"
-              dangerouslySetInnerHTML={{ __html: details?.description }}
-            ></div>
+              // dangerouslySetInnerHTML={{ __html: details?.description }}
+            >
+              {Parser().parse(details?.description)}
+            </div>
           </div>
         </>
       </div>
