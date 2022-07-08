@@ -64,7 +64,16 @@ class AttributesModal extends Component {
                       style={{ backgroundColor: attr.value }}
                     />
                     <div className="modal-counter">
-                      <img src={Minus} alt="minus" />{" "}
+                      <img
+                        src={Minus}
+                        alt="minus"
+                        onClick={() =>
+                          this.handleReduceCount({
+                            attrName: attribute.name,
+                            attrVal: attr.value,
+                          })
+                        }
+                      />{" "}
                       <img
                         src={Add}
                         alt="add"
