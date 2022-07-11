@@ -14,12 +14,25 @@ class SingleProductCard extends Component {
 
     this.props = props;
 
-    this.handleRedirectToProductPage =
-      this.handleRedirectToProductPage.bind(this);
+    // this.handleRedirectToProductPage =
+    //   this.handleRedirectToProductPage.bind(this);
   }
 
   handleRedirectToProductPage = () => {
     this.props.router.navigate(`/product/${this.props.productDetails.id}`);
+  };
+
+  handleAddToCart = () => {
+    const { productDetails, cart } = this.props;
+    if (!productDetails?.inStock) return;
+    console.log(productDetails?.attributes, "attr");
+
+    if (productDetails?.attributes?.length) {
+      cart.updateState("modalState", true);
+      cart.updateState("modalAttributes", productDetails);
+    } else {
+      cart.addItemToCart(productDetails);
+    }
   };
 
   render() {
@@ -27,6 +40,7 @@ class SingleProductCard extends Component {
       (item) => item.currency.symbol === this.props.selected.currency
     );
     const productDetails = this.props.productDetails;
+    // console.log(productDetails, "deets");
 
     return (
       <div className="product-div">
@@ -59,15 +73,7 @@ class SingleProductCard extends Component {
           className={
             productDetails?.inStock ? "add-to-cart" : "add-to-cart nomouse"
           }
-          onClick={() => {
-            productDetails?.inStock &&
-              this.props.cart.updateState("modalState", true);
-            this.props.cart.updateState("modalAttributes", productDetails);
-          }}
-          // onClick={() =>
-          //   productDetails?.inStock &&
-          //   this.props.cart.addItemToCart(productDetails)
-          // }
+          onClick={this.handleAddToCart}
         >
           <img src={CartIcon} alt="add to cart icon" className="cart-icon" />
         </div>

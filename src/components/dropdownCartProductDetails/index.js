@@ -29,18 +29,22 @@ class DropdownCartProductDetails extends Component {
     this.props.cart.updateAttributes(this.props.cartItem.id, name, item.id);
   };
 
-  renderAttributes = (cartItem) => (
-    <Attributes
-      attribute={cartItem?.attr.attrName}
-      cartAttr={cartItem.attr.attrVal}
-    />
-  );
+  renderAttributes = (cartItem) => {
+    return (
+      <Attributes
+        attribute={cartItem?.attr.attrName}
+        cartAttr={cartItem.attr.attrVal}
+      />
+    );
+  };
 
   render() {
     const cartItem = this.props.cartItem;
     const price = cartItem?.prices.find(
       (item) => item?.currency?.symbol === this.props.selected.currency
     );
+
+    console.log(cartItem?.attr);
 
     return (
       <div className="cart-product">
@@ -50,7 +54,7 @@ class DropdownCartProductDetails extends Component {
           <h6>{`${price?.currency?.symbol ?? ""} ${
             Number(price?.amount.toFixed(2)).toLocaleString("en") ?? ""
           }`}</h6>
-          {cartItem?.attr ? this.renderAttributes(cartItem) : ""}
+          {cartItem?.attr?.attrVal && this.renderAttributes(cartItem)}
         </div>
         <div className="products-section2">
           <div className="product-counter">

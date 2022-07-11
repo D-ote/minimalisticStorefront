@@ -79,6 +79,7 @@ class App extends Component {
   }
 
   addItemToCart(item, attr) {
+    console.log(attr, "addtoCArt");
     const productIndex = this.state.cartLoad.findIndex((cartItem) => {
       return cartItem.id === item.id && cartItem.attr.attrVal === attr.attrVal;
     });
@@ -116,34 +117,57 @@ class App extends Component {
   reduceItemCountFromCart(item, attr) {
     const { cartLoad } = this.state;
 
-    const productIndex = cartLoad.findIndex(
-      (cartItem) =>
-        cartItem.id === item.id && cartItem.attr.attrVal === attr.attrVal
-    );
+    if (attr) {
+      const productIndex = cartLoad.findIndex(
+        (cartItem) =>
+          cartItem.id === item.id && cartItem.attr.attrVal === attr.attrVal
+      );
 
-    if (productIndex >= 0) {
-      this.setState((prevState) => {
-        let newCart = [...prevState.cartLoad];
+      if (productIndex >= 0) {
+        this.setState((prevState) => {
+          let newCart = [...prevState.cartLoad];
 
-        if (newCart[productIndex].count === 1) {
-          newCart.splice(productIndex, 1);
-        } else {
-          newCart[productIndex] = {
-            ...newCart[productIndex],
-            count: newCart[productIndex].count - 1,
-            attr,
-          };
-        }
+          if (newCart[productIndex].count === 1) {
+            newCart.splice(productIndex, 1);
+          } else {
+            newCart[productIndex] = {
+              ...newCart[productIndex],
+              count: newCart[productIndex].count - 1,
+              attr,
+            };
+          }
 
-        this.updateLocalStorage("cartItem", this.newCart);
-        return { cartLoad: newCart };
-      });
+          this.updateLocalStorage("cartItem", this.newCart);
+          return { cartLoad: newCart };
+        });
+      }
+    } else {
+      const productIndex = cartLoad.findIndex(
+        (cartItem) => cartItem.id === item.id
+      );
+
+      if (productIndex >= 0) {
+        this.setState((prevState) => {
+          let newCart = [...prevState.cartLoad];
+
+          if (newCart[productIndex].count === 1) {
+            newCart.splice(productIndex, 1);
+          } else {
+            newCart[productIndex] = {
+              ...newCart[productIndex],
+              count: newCart[productIndex].count - 1,
+            };
+          }
+
+          this.updateLocalStorage("cartItem", this.newCart);
+          return { cartLoad: newCart };
+        });
+      }
     }
   }
 
   updateState(key, val) {
     this.setState({ [key]: val });
-    // return false;
   }
 
   updateAttributes(itemID, attrName, attrVal) {

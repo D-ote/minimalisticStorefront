@@ -1,37 +1,33 @@
 import { Component } from "react";
 import { Add, Cancel, Minus } from "../../assets";
 import { AddToCart, withContext, withRouter } from "../../context/context";
+import { AttributeCount } from "../atttributeCount/attributeCount";
 import { Button } from "../button";
 import "./attributesModal.css";
 
 class AttributesModal extends Component {
   constructor(props) {
     super(props);
-
-    this.props = props;
-
-    this.handleAddCount = this.handleAddCount.bind(this);
-    this.handleReduceCount = this.handleReduceCount.bind(this);
   }
 
   handleAddCount = (attr) => {
-    this.props.cart.addItemToCart(this.props.cart.modalAttributes, attr);
+    const cart = this.props.cart;
+    cart.addItemToCart(cart.modalAttributes, attr);
   };
 
   handleReduceCount = (attr) => {
-    this.props.cart.reduceItemCountFromCart(
-      this.props.cart.modalAttributes,
-      attr
-    );
+    const cart = this.props.cart;
+    cart.reduceItemCountFromCart(cart.modalAttributes, attr);
   };
 
   renderCurrentCount = (attr) => {
-    const count = this.props.cart.cartLoad.findIndex((item) => {
-      return item.attr.attrVal === attr?.value;
+    const cartLoad = this.props.cart.cartLoad;
+    const isAdded = cartLoad.findIndex((item) => {
+      return item.attr.attrVal === attr;
     });
 
-    if (count >= 0) {
-      return this.props.cart.cartLoad.map((item) => item.count)[0];
+    if (isAdded >= 0) {
+      return cartLoad[isAdded].count;
     } else {
       return 0;
     }
@@ -39,6 +35,7 @@ class AttributesModal extends Component {
 
   render() {
     const attributes = this.props.cart.modalAttributes.attributes;
+    const { cart, router } = this.props;
 
     return (
       <div className="modal-overlay">
@@ -47,7 +44,7 @@ class AttributesModal extends Component {
             <h6>Please select a variation</h6>
             <div
               className="close-modal"
-              onClick={() => this.props.cart.updateState("modalState", false)}
+              onClick={() => cart.updateState("modalState", false)}
             >
               <img src={Cancel} alt="close" />
             </div>
@@ -67,16 +64,19 @@ class AttributesModal extends Component {
                       <img
                         src={Minus}
                         alt="minus"
+                        className="cursor"
                         onClick={() =>
                           this.handleReduceCount({
                             attrName: attribute.name,
                             attrVal: attr.value,
                           })
                         }
-                      />{" "}
+                      />
+                      {this.renderCurrentCount(attr.id)}
                       <img
                         src={Add}
                         alt="add"
+                        className="cursor"
                         onClick={() => {
                           this.handleAddCount({
                             attrName: attribute.name,
@@ -103,7 +103,7 @@ class AttributesModal extends Component {
                         }
                         className="cursor"
                       />
-                      {this.renderCurrentCount(attr)}
+                      {this.renderCurrentCount(attr.id)}
                       <img
                         src={Add}
                         alt="add"
@@ -126,7 +126,7 @@ class AttributesModal extends Component {
               <Button
                 label="Continue Shopping"
                 btnType="plain"
-                onClick={() => this.props.cart.updateState("modalState", false)}
+                onClick={() => cart.updateState("modalState", false)}
               />
             </div>
             <div className="btn-div">
@@ -134,8 +134,8 @@ class AttributesModal extends Component {
                 label="View Bag"
                 btnType="green"
                 onClick={() => {
-                  this.props.cart.updateState("modalState", false);
-                  this.props.router.navigate("/viewbag");
+                  cart.updateState("modalState", false);
+                  router.navigate("/viewbag");
                 }}
               />
             </div>

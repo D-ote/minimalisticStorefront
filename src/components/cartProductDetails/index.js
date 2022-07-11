@@ -13,32 +13,32 @@ class CartProductDetails extends Component {
   constructor(props) {
     super(props);
 
-    this.props = props;
-
-    this.handleAddCount = this.handleAddCount.bind(this);
-    this.handleReduceCount = this.handleReduceCount.bind(this);
-    this.handleSelectAttribute = this.handleSelectAttribute.bind(this);
     this.updateAttribute = this.props.cart.updateAttribute;
   }
 
   handleAddCount = (attr) => {
-    this.props.cart.addItemToCart(this.props.productDetails, attr);
+    const { cart, productDetails } = this.props;
+    cart.addItemToCart(productDetails, attr);
   };
 
   handleReduceCount = (attr) => {
-    this.props.cart.reduceItemCountFromCart(this.props.productDetails, attr);
+    const { cart, productDetails } = this.props;
+    cart.reduceItemCountFromCart(productDetails, attr);
   };
 
   handleSelectAttribute = (name, item) => {
-    this.props.cart.updateAttributes(this.props.cartItem.id, name, item.id);
+    const { cart, cartItem } = this.props;
+    cart.updateAttributes(cartItem.id, name, item.id);
   };
 
-  renderAttributes = (productDetails) => (
-    <Attributes
-      attribute={productDetails?.attr?.attrName}
-      cartAttr={productDetails?.attr?.attrVal}
-    />
-  );
+  renderAttributes = (productDetails) => {
+    return (
+      <Attributes
+        attribute={productDetails?.attr?.attrName}
+        cartAttr={productDetails?.attr?.attrVal}
+      />
+    );
+  };
 
   render() {
     const price = this.props.productDetails?.prices?.find(
@@ -53,7 +53,7 @@ class CartProductDetails extends Component {
           <p className="product-price">{`${price?.currency?.symbol ?? ""} ${
             Number(price?.amount.toFixed(2)).toLocaleString("en") ?? ""
           }`}</p>
-          {productDetails?.attributes
+          {productDetails?.attributes?.attrVal
             ? this.renderAttributes(productDetails)
             : ""}
         </div>
