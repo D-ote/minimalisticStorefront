@@ -25,7 +25,6 @@ class SingleProductCard extends Component {
   handleAddToCart = () => {
     const { productDetails, cart } = this.props;
     if (!productDetails?.inStock) return;
-    console.log(productDetails?.attributes, "attr");
 
     if (productDetails?.attributes?.length) {
       cart.updateState("modalState", true);
@@ -40,7 +39,6 @@ class SingleProductCard extends Component {
       (item) => item.currency.symbol === this.props.selected.currency
     );
     const productDetails = this.props.productDetails;
-    // console.log(productDetails, "deets");
 
     return (
       <div className="product-div">

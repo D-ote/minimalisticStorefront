@@ -1,7 +1,6 @@
 import { Component } from "react";
 import { Add, Cancel, Minus } from "../../assets";
 import { AddToCart, withContext, withRouter } from "../../context/context";
-import { AttributeCount } from "../atttributeCount/attributeCount";
 import { Button } from "../button";
 import "./attributesModal.css";
 

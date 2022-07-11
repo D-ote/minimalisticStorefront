@@ -79,7 +79,6 @@ class App extends Component {
   }
 
   addItemToCart(item, attr) {
-    console.log(attr, "addtoCArt");
     const productIndex = this.state.cartLoad.findIndex((cartItem) => {
       return cartItem.id === item.id && cartItem.attr.attrVal === attr.attrVal;
     });
