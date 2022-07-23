@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Add, Minus } from "../../assets";
 import { AddToCart, CurrencyContext, withContext } from "../../context/context";
+import { priceFormatter } from "../../utils/utils";
 import { Attributes } from "../attributes";
 import "./dropdownCartProductDetails.css";
 
@@ -50,7 +51,7 @@ class DropdownCartProductDetails extends Component {
           <p className="product-name">{cartItem?.brand}</p>
           <p className="product-name">{cartItem?.name}</p>
           <h6>{`${price?.currency?.symbol ?? ""} ${
-            Number(price?.amount.toFixed(2)).toLocaleString("en") ?? ""
+            priceFormatter(price?.amount) ?? ""
           }`}</h6>
           {cartItem?.attr?.attrVal && this.renderAttributes(cartItem)}
         </div>

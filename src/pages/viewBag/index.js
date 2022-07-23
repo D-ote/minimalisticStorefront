@@ -6,6 +6,7 @@ import {
   withContext,
   withRouter,
 } from "../../context/context";
+import { priceFormatter } from "../../utils/utils";
 import "./viewBag.css";
 
 class ViewBag extends Component {
@@ -52,7 +53,7 @@ class ViewBag extends Component {
               Tax 21%:{" "}
               <span>
                 {this.props.selected.currency}&nbsp;
-                {Number((0.21 * totalPrice).toFixed(2)).toLocaleString("en")}
+                {priceFormatter(0.21 * totalPrice) ?? ""}
               </span>
             </p>
           </div>
@@ -66,7 +67,7 @@ class ViewBag extends Component {
               Total:{" "}
               <span>
                 {this.props.selected.currency}&nbsp;
-                {Number(totalPrice.toFixed(2)).toLocaleString("en")}
+                {priceFormatter(totalPrice) ?? ""}
               </span>
             </p>
           </div>

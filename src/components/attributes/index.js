@@ -35,7 +35,7 @@ class Attributes extends Component {
                   <div
                     className={
                       this.checkAttribute(title.name, item.id)
-                        ? "selected-attr chart-item"
+                        ? "color-attr chart-item"
                         : "chart-item"
                     }
                     key={item.id}

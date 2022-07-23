@@ -1,7 +1,6 @@
 .cart-page {
     display: flex;
     justify-content: space-between;
-    /* margin-bottom: 40px; */
 }
 
 .products-section2 {
@@ -35,7 +34,6 @@
     font-weight: 600;
     font-size: 30px;
     text-transform: capitalize;
-    margin-bottom: 10px;
 }
 
 .product-price {
@@ -45,7 +43,13 @@
 }
 
 .cart-page-product-name {
-    margin-top: 0;
+    margin: 0px;
+}
+
+.cart-page-product-brand {
+    font-size: 25px;
+    font-family: 'Raleway' !important;
+    margin: 5px 0px;
 }
 
 .product-description h6 {

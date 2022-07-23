@@ -9,6 +9,7 @@ import { Button } from "..";
 import "./dropdown.css";
 import { EmptyState } from "../emptyState";
 import { DropdownCartProductDetails } from "../dropdownCartProductDetails";
+import { priceFormatter } from "../../utils/utils";
 
 const Dropdown = forwardRef((props, ref) => {
   class Dropdown extends Component {
@@ -50,8 +51,8 @@ const Dropdown = forwardRef((props, ref) => {
                 <div className="products-total">
                   <h6>Total</h6>
                   <h6>
-                    {this.props.selected.currency}&nbsp;
-                    {Number(totalPrice.toFixed(2) ?? 0).toLocaleString("en")}
+                    {this.props.selected.currency}
+                    {priceFormatter(totalPrice) ?? ""}
                   </h6>
                 </div>
               )}

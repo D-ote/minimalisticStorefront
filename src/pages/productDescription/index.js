@@ -1,8 +1,8 @@
 import { graphql } from "@apollo/client/react/hoc";
 import { Parser } from "html-to-react";
 import React, { Component } from "react";
+import { Vector } from "../../assets";
 import { Attributes, Button, ImgThumbnail, Loader } from "../../components";
-import Alert from "../../components/alert";
 import { AttributesModal } from "../../components/attributesModal";
 import {
   AddToCart,
@@ -11,6 +11,7 @@ import {
   withRouter,
 } from "../../context/context";
 import { GET_SINGLE_PRODUCT } from "../../graphQl/queries";
+import { priceFormatter } from "../../utils/utils";
 import "./productDescription.css";
 
 class ProductDescription extends Component {
@@ -19,21 +20,24 @@ class ProductDescription extends Component {
 
     this.props = props;
     this.state = {
-      selectedImage: null,
+      selectedImage: 0,
       details: {},
       attr: null,
       hasSelectedAttribute: false,
       isSuccess: false,
+      currentIndex: 0,
     };
 
     this.cart = this.props.cart;
     this.select = this.props.currency;
 
     this.handleAddProductToCart = this.handleAddProductToCart.bind(this);
+    this.goToPreviousImg = this.goToPreviousImg.bind(this);
+    this.goToNextImg = this.goToNextImg.bind(this);
   }
 
   handleAddProductToCart(productDetails) {
-    this.props.cart.updateState("modalState", true);
+    this.props.cart.addItemToCart(productDetails, this.state.attr);
     this.props.cart.updateState("modalAttributes", productDetails);
   }
 
@@ -62,9 +66,25 @@ class ProductDescription extends Component {
         item={item}
         key={index}
         stockState={stockState}
-        onClick={() => this.setState({ selectedImage: item })}
+        onClick={() => this.setState({ selectedImage: index })}
       />
     ));
+
+  goToPreviousImg = () => {
+    const length = this.props.data.product.gallery.length;
+
+    this.setState((prevState) => ({
+      selectedImage: (prevState.selectedImage - 1 + length) % length,
+    }));
+  };
+
+  goToNextImg = () => {
+    const length = this.props.data.product.gallery.length;
+
+    this.setState((prevState) => ({
+      selectedImage: (prevState.selectedImage + 1) % length,
+    }));
+  };
 
   renderAttributes = (details) => {
     return details?.attributes?.map((attribute, index) => (
@@ -74,7 +94,12 @@ class ProductDescription extends Component {
         cartAttr={this.state.attr}
         addAttribute={(val) =>
           this.setState((prevState) => ({
-            attr: { ...prevState.attr, [attribute.name]: val },
+            attr: {
+              ...prevState.attr,
+              [attribute.name]: val,
+              attrName: attribute.name,
+              attrVal: val,
+            },
           }))
         }
       />
@@ -84,11 +109,10 @@ class ProductDescription extends Component {
   render() {
     const details = this.props.data.product;
     const selectedImage =
-      this.state?.selectedImage ?? this.props.data?.product?.gallery[0];
+      this.props.data?.product?.gallery[this.state.selectedImage];
 
     const loading = this.props.data.loading;
     const error = this.props.data?.error;
-    const alert = this.state?.isSuccess;
     this.price = this.props?.data?.product?.prices?.find(
       (item) => item.currency.symbol === this.props.selected.currency
     );
@@ -131,6 +155,22 @@ class ProductDescription extends Component {
                 : "product-desc-main-img outofstock"
             }
           >
+            {details?.gallery?.length > 1 && (
+              <>
+                <div
+                  className="slider-arrow-left"
+                  onClick={() => this.goToPreviousImg()}
+                >
+                  <img src={Vector} alt="arrow left" />
+                </div>
+                <div
+                  className="slider-arrow-right"
+                  onClick={() => this.goToNextImg()}
+                >
+                  <img src={Vector} alt="arrow right" />
+                </div>
+              </>
+            )}
             <img src={selectedImage} alt="big img" />
             <div
               className={
@@ -148,7 +188,7 @@ class ProductDescription extends Component {
             <div className="product-price">
               <p>Price:</p>
               <h6>{`${this.price?.currency?.symbol ?? ""} ${
-                this.price?.amount ?? ""
+                priceFormatter(this.price?.amount) ?? ""
               }`}</h6>
             </div>
 
@@ -163,10 +203,7 @@ class ProductDescription extends Component {
               />
             </div>
 
-            <div
-              className="summary"
-              // dangerouslySetInnerHTML={{ __html: details?.description }}
-            >
+            <div className="summary">
               {Parser().parse(details?.description)}
             </div>
           </div>

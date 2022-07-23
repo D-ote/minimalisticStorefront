@@ -6,16 +6,11 @@ import {
   withContext,
   withRouter,
 } from "../../context/context";
-import { roundToTwo } from "../../utils/utils";
+import { priceFormatter } from "../../utils/utils";
 
 class SingleProductCard extends Component {
   constructor(props) {
     super(props);
-
-    this.props = props;
-
-    // this.handleRedirectToProductPage =
-    //   this.handleRedirectToProductPage.bind(this);
   }
 
   handleRedirectToProductPage = () => {
@@ -62,7 +57,7 @@ class SingleProductCard extends Component {
             <p>{productDetails?.name}</p>
             <h6>
               {`${price?.currency?.symbol ?? ""} ${
-                roundToTwo(price?.amount.toFixed(2)).toLocaleString("en") ?? ""
+                priceFormatter(price?.amount) ?? ""
               }`}
             </h6>
           </figcaption>

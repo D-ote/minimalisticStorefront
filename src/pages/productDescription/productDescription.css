@@ -34,6 +34,7 @@
     height: 550px;
     margin-right: 20px;
     grid-area: big;
+    position: relative;
 }
 
 .product-desc-main-img img {
@@ -136,7 +137,7 @@
 .pdp-stock {
     position: absolute;
     top: 50%;
-    right: 45%;
+    right: 20%;
     transform: translate(-50%, -50%);
     text-align: center;
     z-index: 4;      
@@ -155,7 +156,31 @@
     font-weight: 400;
     font-size: 12px;
     color: var(--c-faded);
+}
 
+.slider-arrow-left {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 50%;
+    transform: rotate(90deg) !important;
+}
+.slider-arrow-right {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: rotate(270deg);
+}
+
+.slider-arrow-left img, .slider-arrow-right img {
+    width: 100%;
+    height: 100%;
+}
+
+.slider-arrow-left:hover, .slider-arrow-right:hover {
+    cursor: pointer;
 }
 
 @media (max-width: 1025px) {

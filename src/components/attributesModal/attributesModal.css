@@ -93,3 +93,9 @@
     background-color: var(--c-text);
     color: var(--c-white);
 }
+
+.color-attr {
+  border: 2px double black !important;
+  transform: scale(1.2);
+
+}

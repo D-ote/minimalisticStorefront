@@ -6,6 +6,7 @@ import {
   withContext,
   withRouter,
 } from "../../context/context";
+import { priceFormatter } from "../../utils/utils";
 import { Attributes } from "../attributes";
 import "./cartProductDetails.css";
 
@@ -50,8 +51,9 @@ class CartProductDetails extends Component {
       <div className="cart-page">
         <div className="cart-page-product-description">
           <h2 className="cart-page-product-name">{productDetails?.brand}</h2>
+          <p className="cart-page-product-brand">{productDetails?.name}</p>
           <p className="product-price">{`${price?.currency?.symbol ?? ""} ${
-            Number(price?.amount.toFixed(2)).toLocaleString("en") ?? ""
+            priceFormatter(price?.amount) ?? ""
           }`}</p>
           {productDetails?.attributes?.attrVal
             ? this.renderAttributes(productDetails)

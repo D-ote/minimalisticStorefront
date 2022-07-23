@@ -7,7 +7,6 @@ export const AddToCart = createContext();
 export const CartItemCount = createContext();
 export const GrandTotal = createContext();
 
-// hoc context
 export const withContext = (contextName, context, WrappedComponent) => (p) => {
   return (
     <WrappedComponent
