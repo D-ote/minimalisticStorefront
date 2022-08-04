@@ -89,7 +89,6 @@ class App extends Component {
         newCart[productIndex] = {
           ...newCart[productIndex],
           count: newCart[productIndex].count + 1,
-          attr,
         };
 
         this.updateLocalStorage("cartItem", newCart);
@@ -97,16 +96,8 @@ class App extends Component {
       });
     } else {
       this.setState((prevState) => {
-        const generateAtt = item.attributes.reduce(
-          (acc, curr) => ({ ...acc, [curr.name]: curr.items[0].id }),
-          {}
-        );
-
         return {
-          cartLoad: [
-            ...prevState.cartLoad,
-            { ...item, count: 1, attr: attr || generateAtt },
-          ],
+          cartLoad: [...prevState.cartLoad, { ...item, count: 1, attr: attr }],
         };
       });
       this.updateLocalStorage();

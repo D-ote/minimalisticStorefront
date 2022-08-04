@@ -33,6 +33,7 @@ const Dropdown = forwardRef((props, ref) => {
 
     render() {
       const { cartLoad, totalPrice, totalCount } = this.props.cart;
+      console.log(cartLoad, "cart");
 
       return (
         <div className="cart-display" ref={ref} id="dropdown-content">
